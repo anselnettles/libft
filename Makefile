@@ -6,7 +6,7 @@
 #    By: aviholai <aviholai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/18 15:29:53 by aviholai          #+#    #+#              #
-#    Updated: 2022/02/17 18:15:16 by aviholai         ###   ########.fr        #
+#    Updated: 2025/01/21          by aviholai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,12 +73,17 @@ SRC		=	ft_memset.c\
 
 OBJ		=	$(SRC:.c=.o)
 
-LISTSRC	=	$(foreach part,$(SRC), 	$(PL)		${G}| $(part)						${PR})
+#	Determine user OS for `sed` call during compile.
+SED_CMD	=	$(shell uname | grep -q Darwin && echo "sed -i .bak" || echo "sed -i.bak")
+
+LISTSRC = $(foreach part,$(SRC), 	$(PL)		${G}| $(part)$(if $(shell [ $$(echo -n $(part) | wc -c) -gt 13 ] && echo true),					,						)${PR})
 
 #	Running 'make' runs 'all' content: the 'art_header', '$(NAME)' and
 #	'art_footer' rules, effectively building the whole archive.
 
 all:		$(NAME)
+			@#Runs `clean` and discards standard output (truly silent.)
+			@$(MAKE) clean > /dev/null 2>&1
 
 #	Run '$(NAME)' to run compile an archive with demanded check-ups and filters.
 #	Firstly, the rule will intialize a complete rewrite of the header's (.h)
@@ -98,8 +103,9 @@ $(NAME):
 	@printf "	${PL}		${G}| Renaming header file and fixing references		${PR}"
 	@printf "	${PL}		${G}| in sources.						${PR}"
 	@sleep 0.8
-	@mv *.h $(TITLE).h
-	@sed -i .bak "s/#include \".*/#include \"\$(TITLE).h\"/g" $(SRC)
+	@-mv *.h $(TITLE).h
+	@#	Determine correct SED command based on user OS. Rename library files.:
+	@$(SED_CMD) "s/#include \".*/#include \"$(TITLE).h\"/g" $(SRC)
 	@printf "	${PL}									${PR}"
 	@printf "	${PL}	${O}Ｃｏｍｐｉｌｉｎｇ.						${PR}"
 	@sleep 0.2
@@ -111,7 +117,7 @@ $(NAME):
 	@sleep 0.2
 	@printf "	${PL}		${G}| Source files compiled to object files with 'gcc'.	${PR}"
 	@sleep 0.2
-	@printf "	${PL}		${G}| " ; ar -r $(TITLE).a $(OBJ) ; printf "\n"
+	@printf "	${PL}		${G}| " ; ar -r $(TITLE).a $(OBJ)
 	@sleep 0.2
 	@printf "	${PL}									${PR}"
 	@printf "	${PL}	${O}Ｆｉｎｉｓｈｅｄ ａｒｃｈｉｖｅ.				${PR}"
