@@ -113,9 +113,9 @@ $(NAME):
 	@printf "	$(PL)		${G}| following source files:				${PR}"
 	@sleep 0.8
 	@printf "$(LISTSRC)"
-	@gcc -Wall -Wextra -Werror -c $(SRC) $(TITLE).h
+	@cc -Wall -Wextra -Werror -c $(SRC) $(TITLE).h
 	@sleep 0.2
-	@printf "	${PL}		${G}| Source files compiled to object files with 'gcc'.	${PR}"
+	@printf "	${PL}		${G}| Source files compiled to object files with 'cc'.	${PR}"
 	@sleep 0.2
 	@printf "	${PL}		${G}| " ; ar -r $(TITLE).a $(OBJ)
 	@sleep 0.2
