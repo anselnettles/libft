@@ -6,7 +6,7 @@
 #    By: aviholai <aviholai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/18 15:29:53 by aviholai          #+#    #+#              #
-#    Updated: 2025/04/15 16:20:19 by aviholai         ###   ########.fr        #
+#    Updated: 2025/04/22 11:17:09 by aviholai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -99,31 +99,22 @@ all:		$(NAME)
 $(NAME):
 	@$(ARTHEAD)
 	@printf "	${PL}	${O}Ｃｏｎｆｉｒｍｉｎｇ ＮＡＭＥ.					${PR}"
-	@sleep 0.2
 	@printf "	${PL}		${G}| Renaming header file and fixing references		${PR}"
 	@printf "	${PL}		${G}| in sources.						${PR}"
-	@sleep 0.8
 	@if [ ! -f $(TITLE).h ]; then mv *.h $(TITLE).h; fi
 	@#	Determine correct SED command based on user OS. Rename library files.:
 	@$(SED_CMD) "s/#include \".*/#include \"$(TITLE).h\"/g" $(SRC)
 	@printf "	${PL}									${PR}"
 	@printf "	${PL}	${O}Ｃｏｍｐｉｌｉｎｇ.						${PR}"
-	@sleep 0.2
 	@printf "	${PL}		${G}| Creating objects and archives with the		${PR}"
 	@printf "	$(PL)		${G}| following source files:				${PR}"
-	@sleep 0.8
 	@printf "$(LISTSRC)"
 	@cc -Wall -Wextra -Werror -c $(SRC) $(TITLE).h
-	@sleep 0.2
 	@printf "	${PL}		${G}| Source files compiled to object files with 'cc'.	${PR}"
-	@sleep 0.2
 	@printf "	${PL}		${G}| " ; ar -r $(TITLE).a $(OBJ)
-	@sleep 0.2
 	@printf "	${PL}									${PR}"
 	@printf "	${PL}	${O}Ｆｉｎｉｓｈｅｄ ａｒｃｈｉｖｅ.				${PR}"
-	@sleep 0.2
 	@printf "	${PL}		${G}| Archive $(TITLE).a compiled with 'ar'.			${PR}"
-	@sleep 0.8
 	@printf "	${PL}									${PR}"
 	@$(ARTFOOTER)
 
@@ -134,26 +125,20 @@ $(NAME):
 
 clean:
 		@echo "${O}\n	Ｒｅｇｕｌａｒ ｃｌｅａｎ－ｕｐ.    | Removing objects, backups and temporary files.\n${G}"
-		@sleep 0.4
 		@rm -v -f $(OBJ)
 		@rm -v -f *.bak
 		@rm -v -f *~
-		@sleep 0.2
 
 fclean:	clean
 		@echo "${O}\n	Ｆｕｌｌ ｃｌｅａｎ－ｕｐ.    | Removing compiles and archives.\n${G}"
-		@sleep 0.4
 		@rm -v -f $(TITLE).a
 		@rm -v -f $(TITLE).h.gch
-		@sleep 0.2
 
 #	The 're' command runs everything from scratch. That is 'fclean' and 'make'.
 
 re:		fclean
 		@echo "${O}\n	Ｒｅ－ｒｕｎ.    | After a full clean-up, running a recompile.\n${G}"
-		@sleep 0.4
 		@$(MAKE)
-		@sleep 0.2
 
 #	Colors and visual effects. Used for more clearer visual representation.
 #	'NOC' stand for "no color", 'O' for orange, 'G' for gray,
