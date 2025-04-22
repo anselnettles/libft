@@ -6,7 +6,7 @@
 #    By: aviholai <aviholai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/18 15:29:53 by aviholai          #+#    #+#              #
-#    Updated: 2025/04/22 11:51:39 by aviholai         ###   ########.fr        #
+#    Updated: 2025/04/22 12:05:58 by aviholai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,8 +83,6 @@ LISTSRC = $(foreach part,$(SRC), 	$(PL)		${G}| $(part)$(if $(shell [ $$(echo -n 
 #	'art_footer' rules, effectively building the whole archive.
 
 all:		$(NAME)
-	@#Runs `clean` and discards standard output (truly silent.)
-	@$(MAKE) clean > /dev/null 2>&1
 
 #	Run '$(NAME)' to run compile an archive with demanded check-ups and filters.
 #	Firstly, the rule will intialize a complete rewrite of the header's (.h)
