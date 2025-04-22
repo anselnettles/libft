@@ -6,7 +6,7 @@
 #    By: aviholai <aviholai@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/18 15:29:53 by aviholai          #+#    #+#              #
-#    Updated: 2025/04/22 11:17:09 by aviholai         ###   ########.fr        #
+#    Updated: 2025/04/22 11:51:39 by aviholai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,29 +14,23 @@
 #	header's (.h) filename and all references to it in SRC files upon 
 #	running $(NAME).
 
-TITLE	=	libft
+TITLE		=	libft
 
-NAME	=	$(TITLE).a
+NAME		=	$(TITLE).a
 
 SRC		=	ft_memset.c\
 			ft_bzero.c\
 			ft_memcpy.c\
-			ft_memccpy_bonus.c\
 			ft_memmove.c\
 			ft_memchr.c\
 			ft_memcmp.c\
 			ft_strlen.c\
 			ft_strdup.c\
 			ft_strcpy.c\
-			ft_strncpy_bonus.c\
-			ft_strcat_bonus.c\
-			ft_strncat_bonus.c\
 			ft_strlcat.c\
 			ft_strchr.c\
 			ft_strrchr.c\
-			ft_strstr_bonus.c\
 			ft_strnstr.c\
-			ft_strcmp_bonus.c\
 			ft_strncmp.c\
 			ft_atoi.c\
 			ft_isalpha.c\
@@ -46,32 +40,39 @@ SRC		=	ft_memset.c\
 			ft_isprint.c\
 			ft_toupper.c\
 			ft_tolower.c\
+			ft_striteri.c\
+			ft_strmapi.c\
+			ft_strjoin.c\
+			ft_strtrim.c\
+			ft_itoa.c\
+			ft_putchar_fd.c\
+			ft_putstr_fd.c\
+			ft_putendl_fd.c\
+			ft_putnbr_fd.c
+OBJ		=	$(SRC:.c=.o)
+
+BONUS_SRC	=	ft_memccpy_bonus.c\
+			ft_strncpy_bonus.c\
+			ft_strcat_bonus.c\
+			ft_strncat_bonus.c\
+			ft_strstr_bonus.c\
+			ft_strcmp_bonus.c\
 			ft_memalloc_bonus.c\
 			ft_memdel_bonus.c\
 			ft_strnew_bonus.c\
 			ft_strdel_bonus.c\
 			ft_strclr_bonus.c\
 			ft_striter_bonus.c\
-			ft_striteri.c\
 			ft_strmap_bonus.c\
-			ft_strmapi.c\
 			ft_strequ_bonus.c\
 			ft_strnequ_bonus.c\
 			ft_strsub_bonus.c\
-			ft_strjoin.c\
-			ft_strtrim.c\
 			ft_strsplit_bonus.c\
-			ft_itoa.c\
 			ft_putchar_bonus.c\
 			ft_putstr_bonus.c\
 			ft_putendl_bonus.c\
-			ft_putnbr_bonus.c\
-			ft_putchar_fd.c\
-			ft_putstr_fd.c\
-			ft_putendl_fd.c\
-			ft_putnbr_fd.c
-
-OBJ		=	$(SRC:.c=.o)
+			ft_putnbr_bonus.c
+BONUS_OBJ	=	$(BONUS_SRC:.c=.o)
 
 #	Determine user OS for `sed` call during compile.
 SED_CMD	=	$(shell uname | grep -q Darwin && echo "sed -i .bak" || echo "sed -i.bak")
@@ -82,8 +83,8 @@ LISTSRC = $(foreach part,$(SRC), 	$(PL)		${G}| $(part)$(if $(shell [ $$(echo -n 
 #	'art_footer' rules, effectively building the whole archive.
 
 all:		$(NAME)
-			@#Runs `clean` and discards standard output (truly silent.)
-			@$(MAKE) clean > /dev/null 2>&1
+	@#Runs `clean` and discards standard output (truly silent.)
+	@$(MAKE) clean > /dev/null 2>&1
 
 #	Run '$(NAME)' to run compile an archive with demanded check-ups and filters.
 #	Firstly, the rule will intialize a complete rewrite of the header's (.h)
@@ -118,6 +119,15 @@ $(NAME):
 	@printf "	${PL}									${PR}"
 	@$(ARTFOOTER)
 
+
+#	Wow. Suddenly. Bonus functions.
+
+bonus : .bonus
+    
+.bonus : $(OBJ) $(BONUS_OBJ)
+	@touch .bonus;
+	@ar -rc $(NAME) $(BONUS_OBJ)
+
 #	The 'clean' command removes the compiled object files.
 #	'rm', the remove command, with flags '-v' (verbose, lists the said files)
 #	and '-f' (forcefully remove without prompts.)
@@ -126,6 +136,7 @@ $(NAME):
 clean:
 		@echo "${O}\n	Ｒｅｇｕｌａｒ ｃｌｅａｎ－ｕｐ.    | Removing objects, backups and temporary files.\n${G}"
 		@rm -v -f $(OBJ)
+		@rm -v -f $(BONUS_OBJ)
 		@rm -v -f *.bak
 		@rm -v -f *~
 
@@ -133,6 +144,7 @@ fclean:	clean
 		@echo "${O}\n	Ｆｕｌｌ ｃｌｅａｎ－ｕｐ.    | Removing compiles and archives.\n${G}"
 		@rm -v -f $(TITLE).a
 		@rm -v -f $(TITLE).h.gch
+		@rm -v -f .bonus
 
 #	The 're' command runs everything from scratch. That is 'fclean' and 'make'.
 
